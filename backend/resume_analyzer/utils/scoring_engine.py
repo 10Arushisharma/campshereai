@@ -182,7 +182,7 @@ class ResumeScoringEngine:
         strengths = skills_data.get("skill_strengths", {})
 
         # Base score from skill count (diminishing returns)
-        count_score = min(50, 10 * math.log10(total_skills + 1))
+        count_score = min(50, (total_skills / 15) * 50)
 
         # Diversity bonus (0-25)
         diversity_bonus = diversity_score * 0.25
@@ -211,7 +211,7 @@ class ResumeScoringEngine:
     def _score_projects(self, projects: List[Dict]) -> tuple[float, Dict]:
         """Score projects component (0-100)."""
         if not projects:
-            return 30.0, {"count": 0, "avg_tech": 0, "has_urls": False, "has_descriptions": False}
+            return 10.0, {"count": 0, "avg_tech": 0, "has_urls": False, "has_descriptions": False}
 
         count = len(projects)
 
@@ -256,7 +256,7 @@ class ResumeScoringEngine:
         """Score work experience component (0-100)."""
         if not experiences:
             # Check if this is a fresher resume (no experience expected)
-            return 50.0, {"count": 0, "total_duration": "N/A", "is_fresher": True}
+            return 20.0, {"count": 0, "total_duration": "N/A", "is_fresher": True}
 
         count = len(experiences)
 
