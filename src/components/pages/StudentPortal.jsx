@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "../student/Sidebar";
 
 import Dashboard from "../student/Dashboard";
 import JobRecommendation from "../student/JobRecommendation";
 import ReadinessScore from "../student/ReadinessScore";
 import Profile from "../student/Profile";
+import Sidebar from "../common/Sidebar";
 
 function StudentPortal() {
   return (
