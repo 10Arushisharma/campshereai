@@ -49,10 +49,22 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      alert("Fill all fields");
-      return;
-    }
+ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email || !password) {
+    alert("All fields are required");
+    return;
+  }
+
+  if (!emailRegex.test(email)) {
+    alert("Please enter a valid email (e.g. example@gmail.com)");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters");
+    return;
+  }
 
 // Console output
   console.table({
@@ -62,13 +74,29 @@ const Login = () => {
   });
 
 
-    if (role === "student") {
-      navigate("/student-dashboard");
-    } else if (role === "admin") {
-      navigate("/admin-dashboard");
-    } else if (role === "recruiter") {
-      navigate("/recruiter-dashboard");
-    }
+  //   if (role === "student") {
+  //     navigate("/student-dashboard");
+  //   } else if (role === "admin") {
+  //     navigate("/admin-dashboard");
+  //   } else if (role === "recruiter") {
+  //     navigate("/recruiter-dashboard");
+  //   }
+  // };
+
+  if (role === "student") {
+  localStorage.setItem("role", "student");
+  navigate("/student-dashboard");
+}
+
+else if (role === "recruiter") {
+  localStorage.setItem("role", "recruiter"); 
+  navigate("/recruiter-dashboard");
+}
+
+else if (role === "admin") {
+  localStorage.setItem("role", "admin");
+  navigate("/admin-dashboard");
+}
   };
 
   return (

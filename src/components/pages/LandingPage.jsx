@@ -90,10 +90,10 @@ const stories = [
                 onClick={() => navigate(item.path)}
                 className="flex items-center gap-4 p-5 mb-4 rounded-xl bg-white/60 dark:bg-white/10 border hover:bg-blue-600 hover:text-white cursor-pointer transition"
               >
-                <div className="text-2xl">{item.icon}</div>
+                <div className="text-xl">{item.icon}</div>
                 <div>
-                  <h3 className="font-semibold text-lg">{item.title}</h3>
-                  <p className="text-sm opacity-80">{item.desc}</p>
+                  <h3 className="font-semibold text-base">{item.title}</h3>
+                  <p className="text-xs opacity-80">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -101,8 +101,8 @@ const stories = [
         </motion.div>
 
              {/* PROCESS SECTION */}
-      <section id="process" className="py-20 px-6 md:px-10 bg-white">
-        <h2 className="text-4xl font-bold text-center mb-14">Our Process</h2>
+      <section id="process" className="py-16 px-6 md:px-10 bg-white">
+        <h2 className="text-2xl md:text-4xl font-bold text-center mb-10">Our Process</h2>
         <div className="grid md:grid-cols-4 gap-6">
           {["Create Profile", "Upload Resume", "Get AI Insights", "Apply & Get Placed"].map((step, i) => (
             <div key={i} className="bg-blue-50 p-6 rounded-2xl shadow-sm text-center">

@@ -99,9 +99,6 @@ function ReadinessScore() {
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
-
         <div className="w-full space-y-6">
 
           <div>
@@ -165,10 +162,10 @@ function ReadinessScore() {
 
           {/* CHARTS */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border shadow p-5">
+            <div className="bg-white rounded-xl border shadow p-5 min-w-0">
               <h3 className="text-sm font-semibold mb-4">Skill Radar</h3>
-              <div className="w-full h-[260px] sm:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="w-full min-h-[260px] ">
+                <ResponsiveContainer width="100%" height={300}>
                   <RadarChart data={radarData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="skill" />
@@ -184,12 +181,12 @@ function ReadinessScore() {
             </div>
 
             {/* BAR */}
-            <div className="bg-white rounded-xl border shadow p-5">
+            <div className="bg-white rounded-xl border shadow p-5 min-h-0">
               <h3 className="text-sm font-semibold mb-4">
                 Company Match %
               </h3>
-              <div className="w-full h-[260px] sm:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="w-full min-h-[260px]">
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={tierData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" />
@@ -243,7 +240,6 @@ function ReadinessScore() {
           </div>
 
         </div>
-      </main>
     </div>
   );
 }

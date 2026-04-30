@@ -122,7 +122,7 @@ function Dashboard() {
             Your placement journey is 82% ready for the current cycle.
           </p>
         </div>
-        <Button className="bg-blue-600 text-white px-5 py-2.5 text-sm font-semibold">
+        <Button className="text-black px-5 py-2.5 text-sm font-semibold">
           View Resume Analysis
         </Button>
       </div>
@@ -239,17 +239,21 @@ function Dashboard() {
         </div>
 
         <div className="col-span-2 space-y-3">
-          <div className="bg-blue-600 text-white p-4 rounded-xl">
-            <p className="text-xs">Upcoming Drive</p>
-            <h3 className="font-bold mt-2">Microsoft</h3>
+          <div className=" text-black  shadow border  p-4 rounded-xl font-bold ">
+            <h2 > Upcoming Drive </h2>
           </div>
 
-          <div className="bg-white p-4 rounded-xl shadow border flex justify-between">
+          <div className="bg-white p-4 rounded-xl shadow border flex justify-between hover:bg-blue-600  hover:text-white">
+            <p>Microsoft</p>
+            <ChevronRight />
+          </div>
+
+          <div className="bg-white p-4 rounded-xl shadow border flex justify-between hover:bg-blue-600  hover:text-white">
             <p>AWS Workshop</p>
             <ChevronRight />
           </div>
 
-          <div className="bg-white p-4 rounded-xl shadow border flex justify-between">
+          <div className="bg-white p-4 rounded-xl shadow border flex justify-between hover:bg-blue-600  hover:text-white">
             <p>Mock Interview</p>
             <ChevronRight />
           </div>
