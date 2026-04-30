@@ -4,6 +4,14 @@ Skills Extractor Module - NLP-based skills extraction using:
 - Keyword matching with comprehensive skills database
 - Named Entity Recognition (NER) via spaCy
 - TF-IDF vectorization for skill importance ranking
+
+v1.1.0 — Bug fixes (all original logic preserved):
+  FIX 1 [Line 394]: tfidf default changed 0.5 → 0.0 (was inflating all scores)
+  FIX 2 [Line 397]: demand_mult normalized 1.5/1.0 → 1.0/0.4 (was dominating formula)
+  FIX 3 [Lines 404-410]: category_weight normalized 1.0-1.2 → 1.0/0.85/0.70 (same issue)
+  FIX 4 [Line 421]: removed max(40,...) floor (was giving every skill min 40/100)
+  FIX 5 [Line 311]: O(n²) feature_names.index() → O(1) dict lookup
+  FIX 6 [Line 446]: diversity base_score log10 → linear (log10 was unreachable)
 """
 
 import re
@@ -204,10 +212,10 @@ class SkillsExtractor:
         # Map spaCy entity labels to skill-relevant categories
         relevant_labels = {
             "ORG": "organization",      # Companies (Google, Microsoft) -> domain knowledge
-            "PRODUCT": "product",      # Products (AWS, Kubernetes) -> technical skills
-            "GPE": "location",         # Less relevant for skills
+            "PRODUCT": "product",       # Products (AWS, Kubernetes) -> technical skills
+            "GPE": "location",          # Less relevant for skills
             "WORK_OF_ART": "framework", # Framework names
-            "PERSON": "person",        # Not a skill
+            "PERSON": "person",         # Not a skill
         }
 
         for ent in doc.ents:
@@ -294,6 +302,9 @@ class SkillsExtractor:
             feature_names = vectorizer.get_feature_names_out()
             resume_vector = tfidf_matrix[-1]  # Last document is the resume
 
+            # ✅ FIX 5: Build O(1) lookup dict once instead of O(n) list.index() per skill
+            feature_index = {name: i for i, name in enumerate(feature_names)}
+
             # Extract scores for found skills
             skill_scores = {}
             for skill in skills:
@@ -307,8 +318,9 @@ class SkillsExtractor:
                 ]
 
                 for var in variations:
-                    if var in feature_names:
-                        idx = list(feature_names).index(var)
+                    # ✅ FIX 5 continued: O(1) dict lookup instead of list.index()
+                    idx = feature_index.get(var)
+                    if idx is not None:
                         score = resume_vector[0, idx]
                         skill_scores[skill] = max(skill_scores.get(skill, 0), float(score))
                         break
@@ -318,8 +330,8 @@ class SkillsExtractor:
                     words = skill.split()
                     if len(words) == 2:  # Bigram
                         bigram = f"{words[0]} {words[1]}"
-                        if bigram in feature_names:
-                            idx = list(feature_names).index(bigram)
+                        idx = feature_index.get(bigram)
+                        if idx is not None:
                             skill_scores[skill] = float(resume_vector[0, idx])
 
             return skill_scores
@@ -381,44 +393,59 @@ class SkillsExtractor:
         Calculate per-skill strength scores (0-100).
         Combines:
         - TF-IDF importance weight (30%)
-        - Demand multiplier (25%)
+        - Demand score (25%)
         - Frequency in text (25%)
         - Category weight (20%)
+
+        v1.1.0 fixes:
+          FIX 1: tfidf default 0.5 → 0.0  (was inflating every skill baseline)
+          FIX 2: demand_mult 1.5/1.0 → normalized 1.0/0.4  (was exceeding weight budget)
+          FIX 3: category_weight 1.0-1.2 → normalized 0.60-1.0  (same issue)
+          FIX 4: removed max(40, raw_score) floor  (was giving every skill ≥ 40 regardless)
         """
         strengths = {}
         text_lower = text.lower()
         word_count = len(text.split())
 
         for skill in skills:
-            # Base TF-IDF score
-            tfidf_score = tfidf_scores.get(skill, 0.5)
+            # ✅ FIX 1: Default to 0.0 not 0.5 — absent TF-IDF = 0, not inflated
+            tfidf_raw = tfidf_scores.get(skill, 0.0)
+            # Normalize: typical max TF-IDF in a 500-word doc ≈ 0.30
+            tfidf_norm = min(1.0, tfidf_raw / 0.30)
 
-            # High demand multiplier
-            demand_mult = 1.5 if skill in self.high_demand_skills else 1.0
+            # ✅ FIX 2: Normalize demand score to 0–1 range
+            # Old: demand_mult = 1.5 or 1.0 (used as multiplier, not a 0-1 weight)
+            # New: demand_norm = 1.0 or 0.4 (both within the 0-1 budget for 25 pts)
+            demand_norm = 1.0 if skill in self.high_demand_skills else 0.4
 
-            # Frequency score
+            # Frequency score (unchanged — already 0–1)
             frequency = text_lower.count(skill)
             freq_score = min(1.0, frequency / max(1, word_count / 200))
 
-            # Category weight
-            category_weight = 1.0
+            # ✅ FIX 3: Normalize category weight to 0–1 range
+            # Old: 1.0–1.2 (values > 1.0 exceeded the weight budget of 20 pts)
+            # New: 0.60–1.0 so the maximum contribution is exactly 20 pts
             if skill in self.skill_categories["technical"]:
-                category_weight = 1.2
-            elif skill in self.skill_categories["soft"]:
-                category_weight = 1.0
+                cat_norm = 1.0    # technical → full 20 pts
             elif skill in self.skill_categories["domain"]:
-                category_weight = 1.1
+                cat_norm = 0.85   # domain → 17 pts
+            elif skill in self.skill_categories["soft"]:
+                cat_norm = 0.70   # soft → 14 pts
+            else:
+                cat_norm = 0.60   # uncategorized → 12 pts
 
-            # Combined score (0-100)
+            # All components are 0–1, weights sum to 100
             raw_score = (
-                (tfidf_score * 30) +
-                (demand_mult * 25) +
-                (freq_score * 25) +
-                (category_weight * 20)
+                (tfidf_norm  * 30) +   # 0–30
+                (demand_norm * 25) +   # 0–25
+                (freq_score  * 25) +   # 0–25
+                (cat_norm    * 20)     # 0–20
             )
 
-            # Normalize to 0-100
-            normalized = min(100, max(40, raw_score))
+            # ✅ FIX 4: Remove min 40 floor — a weak skill SHOULD score low
+            # Old: min(100, max(40, raw_score))
+            # New: min(100, max(0, raw_score))
+            normalized = min(100, max(0, raw_score))
             strengths[skill] = round(normalized, 1)
 
         return strengths
@@ -427,6 +454,11 @@ class SkillsExtractor:
         """
         Calculate skill diversity score (0-100).
         Rewards having skills across multiple categories.
+
+        v1.1.0 fix:
+          FIX 6: base_score log10 → linear scale
+          Old: min(60, 20 * math.log10(total + 1))  — needs 99,999 skills to reach 60
+          New: min(60, (total / 20) * 60)             — 20 skills = full 60 pts
         """
         tech = len(categorized["technical"])
         soft = len(categorized["soft"])
@@ -441,9 +473,8 @@ class SkillsExtractor:
         categories_with_skills = sum(1 for c in [tech, soft, domain] if c > 0)
         diversity_bonus = categories_with_skills * 15  # 15 points per category
 
-        # Base score: logarithmic scale to prevent diminishing returns
-        import math
-        base_score = min(60, 20 * math.log10(total + 1))
+        # ✅ FIX 6: Linear scale — 20 skills = full 60 pts (was log10 unreachable)
+        base_score = min(60, (total / 20) * 60)
 
         # Penalty for being single-category
         category_balance = min(tech, soft, domain) / max(1, total / 3)
