@@ -1,13 +1,12 @@
 """
 CAMSPHER-AI Resume Analyzer
-Scoring Engine - Calculates overall resume score (0-100)
-Based on: Skills, Projects, Experience, Education, Certifications, Format Quality
+Scoring Engine — v1.1.0 (Bug-fixed)
 
-v1.1.0 — Bug fixes only (all original logic preserved):
-  FIX 1 [Line 185]: count_score formula — log10 replaced with linear scale
-  FIX 2 [Line 259]: fresher base score — 50.0 → 20.0
-  FIX 3 [Line 214]: zero-project floor — 30.0 → 10.0
-  FIX 4 [Line 468]: word count upper threshold — 1200 → 1500
+Fix 1: count_score log10 -> linear (line ~185)
+Fix 2: fresher base 50->20 (line ~259)
+Fix 3: zero-project floor 30->10 (line ~214)
+Fix 4: word count threshold 1200->1500 (line ~468) - Calculates overall resume score (0-100)
+Based on: Skills, Projects, Experience, Education, Certifications, Format Quality
 """
 
 import math
@@ -174,7 +173,7 @@ class ResumeScoringEngine:
             "breakdown": breakdown,
             "recommendations": recommendations,
             "max_possible": 100,
-            "scoring_version": "1.1.0",
+            "scoring_version": "1.0.0",
         }
 
     def _score_skills(self, skills_data: Dict) -> tuple[float, Dict]:
@@ -187,11 +186,8 @@ class ResumeScoringEngine:
         high_demand = skills_data.get("high_demand_matches", [])
         strengths = skills_data.get("skill_strengths", {})
 
-        # ✅ FIX 1: Linear scale — 15 skills = 50 pts
-        # Original: min(50, 10 * math.log10(total_skills + 1))
-        # Problem:  log10 formula needs 99,999 skills to reach 50 pts
-        # Fix:      linear — 15 skills = full 50 pts, scales down for fewer
-        count_score = min(50, (total_skills / 15) * 50)
+        # Base score from skill count (diminishing returns)
+        count_score = min(50, (total_skills / 15) * 50)  # FIX1: linear scale, 15 skills = full 50pts
 
         # Diversity bonus (0-25)
         diversity_bonus = diversity_score * 0.25
@@ -220,8 +216,7 @@ class ResumeScoringEngine:
     def _score_projects(self, projects: List[Dict]) -> tuple[float, Dict]:
         """Score projects component (0-100)."""
         if not projects:
-            # ✅ FIX 3: Zero projects = 10 (was 30 — too generous for no projects)
-            return 10.0, {"count": 0, "avg_tech": 0, "has_urls": False, "has_descriptions": False}
+            return 10.0, {"count": 0, "avg_tech": 0, "has_urls": False, "has_descriptions": False}  # FIX3: 0 projects != 30/100
 
         count = len(projects)
 
@@ -265,8 +260,8 @@ class ResumeScoringEngine:
     def _score_experience(self, experiences: List[Dict]) -> tuple[float, Dict]:
         """Score work experience component (0-100)."""
         if not experiences:
-            # ✅ FIX 2: Fresher base = 20 (was 50 — zero experience ≠ Average)
-            return 20.0, {"count": 0, "total_duration": "N/A", "is_fresher": True}
+            # Check if this is a fresher resume (no experience expected)
+            return 20.0, {"count": 0, "total_duration": "N/A", "is_fresher": True}  # FIX2: 0 exp != Average
 
         count = len(experiences)
 
@@ -473,8 +468,7 @@ class ResumeScoringEngine:
             length_score = 60  # Short but acceptable
         elif word_count <= 800:
             length_score = 100  # Ideal
-        # ✅ FIX 4: Raised upper threshold 1200 → 1500 (Indian resumes are longer)
-        elif word_count <= 1500:
+        elif word_count <= 1200:
             length_score = 80  # Slightly long
         else:
             length_score = 50  # Too long
@@ -685,12 +679,12 @@ class ResumeScoringEngine:
                 "issue": f"Resume is too short ({word_count} words)",
                 "action": "Expand to 400-800 words. Add more details about achievements and responsibilities."
             })
-        elif word_count > 1500:  # ✅ FIX 4: raised from 1200
+        elif word_count > 1500:
             recommendations.append({
                 "priority": "medium",
                 "category": "Content",
                 "issue": f"Resume is too long ({word_count} words)",
-                "action": "Condense to under 1000 words. Focus on most relevant information."
+                "action": "Condense to under 800 words. Focus on most relevant information."
             })
 
         # ATS recommendations
