@@ -360,7 +360,7 @@ class SelectionPredictorTrainer:
 
         meta = {
             "version": "1.0.0",
-            "n_training_samples": n_training := len(X_train),
+            "n_training_samples": len(X_train),
             "n_test_samples": len(X_test),
             "features": FEATURE_COLUMNS,
             "feature_descriptions": FEATURE_DESCRIPTIONS,
