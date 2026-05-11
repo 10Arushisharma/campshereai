@@ -1,3 +1,5 @@
+import { getFullReadiness } from "../../api/camspherApi";
+// run for each student → sort by readiness_score
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
