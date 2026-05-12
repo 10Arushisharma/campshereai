@@ -15,11 +15,12 @@ Bug fixes vs previous main.py:
   - Added combined 4-model pipeline (/api/full-pipeline)
   - Updated version to 4.0.0
 """
-
+import platform
 import sys
 import os
 from contextlib import asynccontextmanager
 
+is_windows = platform.system() == "Windows"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Query
@@ -830,17 +831,18 @@ async def readiness_direct(request: ReadinessDirectRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Readiness computation failed: {str(e)}")
 
-
 # ============================================================================
 # Run Server
 # ============================================================================
 
 if __name__ == "__main__":
+
     port = int(os.environ.get("PORT", 8000))
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=port,
-        reload=not is_windows, 
+        reload=False,
         log_level="info"
     )
