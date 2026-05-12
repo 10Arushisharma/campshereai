@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   GraduationCap,
@@ -21,9 +21,10 @@ const Badge = ({ children, className = "" }) => (
   </span>
 );
 
-/* Simple Button */
-const Button = ({ children, className = "" }) => (
-  <button className={`rounded-lg ${className}`}>{children}</button>
+const Button = ({ children, className = "", ...props }) => (
+  <button className={`rounded-lg ${className}`} {...props}>
+    {children}
+  </button>
 );
 
 /* Dummy Readiness Chart */
@@ -70,6 +71,21 @@ const statusColors = {
 };
 
 function Dashboard() {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const fileInputRef = useRef();
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click(); // open file picker
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      console.log("Selected file:", file);
+    }
+  };
+
   const { pathname } = useLocation();
 
   const pageTitles = {
@@ -99,16 +115,78 @@ function Dashboard() {
         </h2>
 
         <div className="flex items-center gap-3">
-          <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
-            <Bell size={18} />
-          </button>
+          <div className="flex items-center gap-3 relative">
 
-          <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
-            <Settings size={18} />
-          </button>
+  {/* Notifications */}
+  <div className="relative">
+    <button
+      onClick={() => {
+        setShowNotifications(!showNotifications);
+        setShowSettings(false);
+      }}
+      className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition"
+    >
+      <Bell size={18} />
+    </button>
 
+    {showNotifications && (
+      <div className="absolute right-0 mt-2 w-72 bg-white border rounded-2xl shadow-lg p-4 z-50">
+        <h4 className="font-semibold mb-3">
+          Notifications
+        </h4>
+
+        <div className="space-y-3 text-sm">
+          <div className="border-b pb-2">
+            New company added for placements
+          </div>
+
+          <div className="border-b pb-2">
+            12 students shortlisted today
+          </div>
+
+          <div>
+            Placement report updated
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+
+  {/* Settings */}
+  <div className="relative">
+    <button
+      onClick={() => {
+        setShowSettings(!showSettings);
+        setShowNotifications(false);
+      }}
+      className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition"
+    >
+      <Settings size={18} />
+    </button>
+
+    {showSettings && (
+      <div className="absolute right-0 mt-2 w-56 bg-white border rounded-2xl shadow-lg p-2 z-50">
+
+        <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+          Profile Settings
+        </button>
+
+        <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+          Dashboard Preferences
+        </button>
+
+        <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm text-red-500">
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+
+</div>
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
-            A
+              {(localStorage.getItem("userName") || "U")
+              .charAt(0)
+              .toUpperCase()}
           </div>
         </div>
       </div>
@@ -116,15 +194,30 @@ function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">
-            Welcome back, Alex.
+            Welcome back, {localStorage.getItem("userName") || "User"}.
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Your placement journey is 82% ready for the current cycle.
           </p>
         </div>
-        <Button className="text-black px-5 py-2.5 text-sm font-semibold">
-          View Resume Analysis
-        </Button>
+         <>
+      {/* Hidden Input */}
+      <input
+        type="file"
+        accept=".pdf,.doc,.docx"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
+      {/* Button */}
+      <Button
+        onClick={handleButtonClick}
+        className="text-black px-5 py-2.5 text-sm font-semibold"
+      >
+        Upload Resume
+      </Button>
+    </>
       </div>
 
       {/* Top Stats */}

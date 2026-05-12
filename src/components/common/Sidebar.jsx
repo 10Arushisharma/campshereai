@@ -31,9 +31,9 @@ const sidebarConfig = {
   ],
   admin: [
     { to: "/admin-dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/admin-dashboard/users", label: "Users", icon: Users },
+    { to: "/admin-dashboard/users", label: "UserManagement", icon: Users },
+    { to: "/admin-dashboard/jobs", label: "JobManagement", icon: Building2 },
     { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
-    { to: "/admin-dashboard/companies", label: "Companies", icon: Building2 },
   ],
 };
 
@@ -70,7 +70,7 @@ function Sidebar() {
         {/* LOGO */}
         <div className="px-6 mb-8">
           <h2 className="text-lg font-extrabold text-[#24389c]">
-            {role === "recruiter" ? "CampSphere" : "Concierge AI"}
+            {role === "recruiter" ? "CampSphere" : "CampSphere"}
           </h2>
         </div>
 

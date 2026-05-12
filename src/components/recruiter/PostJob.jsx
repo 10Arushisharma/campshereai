@@ -1,5 +1,4 @@
-import { getAllJobs, getJobCategories } from "../../api/camspherApi";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Plus,
   Search,
@@ -8,6 +7,7 @@ import {
   Calendar,
   MoreHorizontal,
   Trash2 ,
+    X,
 } from "lucide-react";
 
 const initialJobs = [
@@ -34,11 +34,17 @@ function PostJob() {
   const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
-    dept: "",
-    type: "",
-    location: "",
+    company: "",
+    role: "",
     description: "",
+    skills: "",
+    package: "",
+    eligibility: "",
+    cgpa: "",
+    location: "",
+    deadline: "",
+    type: "",
+    applyLink: "",
   });
 
   const filtered = jobs.filter((j) => {
@@ -49,34 +55,51 @@ function PostJob() {
     return matchSearch && matchFilter;
   });
 
-  const handlePost = () => {
-    if (!form.title || !form.dept || !form.type || !form.location) {
-      alert("Fill all fields");
-      return;
-    }
+const handlePost = () => {
+  if (
+    !form.company ||
+    !form.role ||
+    !form.location ||
+    !form.type
+  ) {
+    alert("Fill all fields");
+    return;
+  }
 
-    setJobs([
-      ...jobs,
-      {
-        id: Date.now(),
-        ...form,
-        applicants: 0,
-        date: new Date().toDateString(),
-        status: "LIVE",
-      },
-    ]);
+  setJobs([
+    ...jobs,
+    {
+      id: Date.now(),
+      title: form.role,
+      dept: form.company,
+      company: form.company,
+      role: form.role,
+      type: form.type,
+      location: form.location,
+      description: form.description,
+      package: form.package,
+      applicants: 0,
+      date: new Date().toDateString(),
+      status: "LIVE",
+    },
+  ]);
 
-    setForm({
-      title: "",
-      dept: "",
-      type: "",
-      location: "",
-      description: "",
-    });
+  setForm({
+    company: "",
+    role: "",
+    description: "",
+    skills: "",
+    package: "",
+    eligibility: "",
+    cgpa: "",
+    location: "",
+    deadline: "",
+    type: "",
+    applyLink: "",
+  });
 
-    setOpen(false);
-  };
-
+  setOpen(false);
+};
   const toggleStatus = (id) => {
   setJobs((prev) =>
     prev.map((job) => {
@@ -201,47 +224,168 @@ const deleteJob = (id) => {
         ))}
       </div>
 
-      {/* MODAL */}
-      {open && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-          <div className="bg-white p-5 rounded-xl w-[350px] space-y-3">
-            <h2 className="font-bold">Post New Job</h2>
+     {/* MODAL */}
+{open && (
+  <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto p-4">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-5 space-y-4">
 
-            <input className="border p-2 w-full" placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+        {/* HEADER */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">
+              Create New Job
+            </h2>
 
-            <input className="border p-2 w-full" placeholder="Department"
-              value={form.dept}
-              onChange={(e) => setForm({ ...form, dept: e.target.value })}
-            />
-
-            <input className="border p-2 w-full" placeholder="Type"
-              value={form.type}
-              onChange={(e) => setForm({ ...form, type: e.target.value })}
-            />
-
-            <input className="border p-2 w-full" placeholder="Location"
-              value={form.location}
-              onChange={(e) => setForm({ ...form, location: e.target.value })}
-            />
-
-            <textarea className="border p-2 w-full" placeholder="Description"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-            />
-
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setOpen(false)}>Cancel</button>
-              <button onClick={handlePost} className="!bg-blue-600 text-white px-3 py-1 rounded">
-                Post
-              </button>
-            </div>
+            <p className="text-gray-500 text-sm">
+              Add a new placement opportunity
+            </p>
           </div>
-        </div>
-      )}
 
+          <button
+            onClick={() => setOpen(false)}
+            className="p-1 rounded hover:bg-red-100 text-red-500"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* FORM */}
+<div className="grid md:grid-cols-2 gap-5">
+
+  <input
+    placeholder="Company Name"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.company}
+    onChange={(e) =>
+      setForm({ ...form, company: e.target.value })
+    }
+  />
+
+  <input
+    placeholder="Role Title"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.role}
+    onChange={(e) =>
+      setForm({ ...form, role: e.target.value })
+    }
+  />
+
+  <input
+    placeholder="Package / Salary"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.package}
+    onChange={(e) =>
+      setForm({ ...form, package: e.target.value })
+    }
+  />
+
+  <input
+    placeholder="Location"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.location}
+    onChange={(e) =>
+      setForm({ ...form, location: e.target.value })
+    }
+  />
+
+  <input
+    placeholder="CGPA Requirement"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.cgpa}
+    onChange={(e) =>
+      setForm({ ...form, cgpa: e.target.value })
+    }
+  />
+
+  <select
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.type}
+    onChange={(e) =>
+      setForm({ ...form, type: e.target.value })
+    }
+  >
+    <option value="">Job Type</option>
+    <option>Full-time</option>
+    <option>Internship</option>
+  </select>
+
+  <input
+    type="date"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.deadline}
+    onChange={(e) =>
+      setForm({ ...form, deadline: e.target.value })
+    }
+  />
+
+  <input
+    placeholder="Apply Link"
+    className="h-12 rounded-2xl border px-4 outline-none"
+    value={form.applyLink}
+    onChange={(e) =>
+      setForm({ ...form, applyLink: e.target.value })
+    }
+  />
+
+  <textarea
+    rows={3}
+    placeholder="Required Skills (comma separated)"
+    className="rounded-2xl border p-4 outline-none md:col-span-2"
+    value={form.skills}
+    onChange={(e) =>
+      setForm({ ...form, skills: e.target.value })
+    }
+  />
+
+  <textarea
+    rows={3}
+    placeholder="Eligibility Criteria"
+    className="rounded-2xl border p-4 outline-none md:col-span-2"
+    value={form.eligibility}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        eligibility: e.target.value,
+      })
+    }
+  />
+
+  <textarea
+    rows={4}
+    placeholder="Job Description"
+    className="rounded-2xl border p-4 outline-none md:col-span-2"
+    value={form.description}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        description: e.target.value,
+      })
+    }
+  />
+</div>
+
+        {/* BUTTONS */}
+        <div className="flex justify-end gap-3 pt-2">
+          <button
+            onClick={() => setOpen(false)}
+            className="px-5 py-2 rounded-xl border"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={handlePost}
+            className="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-2 rounded-xl transition-all"
+          >
+            Publish Job
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

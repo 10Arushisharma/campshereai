@@ -132,10 +132,12 @@ const Item = ({ text }) => (
     >
       Companies
     </span>
+  </div>
 
-    <span className="text-gray-500">Activity</span>
-    <span className="text-gray-500">Reports</span>
-
+  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+    {(localStorage.getItem("userName") || "U")
+      .charAt(0)
+      .toUpperCase()}
   </div>
 
 </header>
@@ -146,14 +148,18 @@ const Item = ({ text }) => (
   <>
 
           {/* HEADER */}
-          <div className="flex justify-between items-center flex-wrap gap-4">
+          <div className="flex items-center gap-3">
             <div>
-              <h2 className="text-3xl font-bold">Recruiter Overview</h2>
-              <p className="text-gray-500 text-sm">
-                Welcome back, Sarah. Here is what's happening with your placements today.
-              </p>
-            </div>
-          </div>
+    <h1 className="text-2xl font-bold">
+      Welcome back, {localStorage.getItem("userName") || "User"}.
+    </h1>
+
+    <p className="text-gray-500 text-sm">
+      Here is what's happening with your placements today.
+    </p>
+  </div>
+
+</div>
 
           {/* STATS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 const Login = () => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -46,10 +48,15 @@ const Login = () => {
 
   const current = roleConfig[role];
 
-  const handleLogin = (e) => {
+   const handleSubmit = (e) => {
     e.preventDefault();
 
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+ if (showSignup && !fullName) {
+      alert("Please enter full name");
+      return;
+    }
 
   if (!email || !password) {
     alert("All fields are required");
@@ -61,27 +68,33 @@ const Login = () => {
     return;
   }
 
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters");
+  if (password.length < 4) {
+    alert("Password must be at least 4 characters");
     return;
   }
 
 // Console output
-  console.table({
-    Email: email,
-    Password: password,
-    Role: role,
-  });
+ console.table({
+      FullName: fullName,
+      Email: email,
+      Password: password,
+      Role: role,
+      Mode: showSignup ? "Signup" : "Login",
+    });
 
+    // SAVE ROLE
+    localStorage.setItem("role", role);
+    localStorage.setItem(
+  "userName",
+  fullName || email.split("@")[0]
+);
 
-  //   if (role === "student") {
-  //     navigate("/student-dashboard");
-  //   } else if (role === "admin") {
-  //     navigate("/admin-dashboard");
-  //   } else if (role === "recruiter") {
-  //     navigate("/recruiter-dashboard");
-  //   }
-  // };
+    // SUCCESS ALERT
+    alert(
+      showSignup
+        ? "Account created successfully!"
+        : "Login successful!"
+    );
 
   if (role === "student") {
   localStorage.setItem("role", "student");
@@ -113,12 +126,31 @@ else if (role === "admin") {
 
         {/* TITLE */}
         <h2 className={`text-2xl sm:text-3xl font-bold mb-2 ${current.color}`}>
-          {current.title}
+          {showSignup
+            ? `${role.charAt(0).toUpperCase() + role.slice(1)} Sign Up`
+            : current.title}
         </h2>
 
         <p className="text-gray-500 text-sm mb-6">
-          Welcome back! Please enter your credentials
+          {showSignup
+            ? "Create your new account"
+            : "Welcome back! Please enter your credentials"}
         </p>
+         {showSignup && (
+          <div
+            className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
+          >
+            <User className="text-gray-400 w-5" />
+
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full p-3 outline-none text-sm sm:text-base"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+        )}
 
         {/* EMAIL */}
         <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
@@ -139,33 +171,62 @@ else if (role === "admin") {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             className="w-full p-3 outline-none text-sm sm:text-base"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Eye
-            className="text-gray-400 w-5 cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-        />
+           {showPassword ? (
+            <EyeOff
+              className="text-gray-400 w-5 cursor-pointer"
+              onClick={() => setShowPassword(false)}
+            />
+          ) : (
+            <Eye
+              className="text-gray-400 w-5 cursor-pointer"
+              onClick={() => setShowPassword(true)}
+            />
+          )}
         </div>
-        
-        {/* LOGIN BUTTON */}
+         {/* SUBMIT BUTTON */}
         <button
-          onClick={handleLogin}
-          className={`w-full py-3 rounded-lg text-sm font-semibold text-black ${current.button} shadow-lg hover:shadow-xl transition-all`}
+             onClick={handleSubmit}
+            style={{ backgroundColor:
+              role === "student"
+                 ? "#4a72e0"
+                 : role === "admin"
+                 ? "#e64c4c"
+                 : "#39dc75",
+            }}
+          className="w-full py-3 rounded-lg text-sm font-semibold text-white transition-all shadow-lg hover:opacity-90"
         >
-          Login
+         {showSignup ? "Create Account" : "Login"}
         </button>
 
+        {/* TOGGLE LOGIN/SIGNUP */}
+        <p className="text-sm text-gray-500 mt-5">
+          {showSignup
+            ? "Already have an account? "
+            : "Don't have an account? "}
+
+          <span
+            onClick={() => setShowSignup(!showSignup)}
+            className={`font-semibold cursor-pointer hover:underline ${current.color}`}
+          >
+            {showSignup ? "Login" : "Sign Up"}
+          </span>
+        </p>
+        
         {/* DIVIDER */}
         <div className="my-5 text-gray-400 text-sm">or</div>
 
         {/* GOOGLE BUTTON */}
-        <button className="w-full border py-3 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base hover:bg-gray-50">
+        <button className="w-full border py-3 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base hover:bg-gray-50 transition-all">
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="google"
             className="w-5"
           />
-          Login with Google
+
+          {showSignup ? "Sign Up with Google" : "Login with Google"}
         </button>
       </div>
     </div>
