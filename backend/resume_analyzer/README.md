@@ -133,41 +133,6 @@ resume_analyzer/
 
 ---
 
-## Quick Start
-
-### 1. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-python -m spacy download en_core_web_sm
-```
-
-### 2. Create Required Folders
-
-```bash
-mkdir -p saved_models data
-touch models/__init__.py utils/__init__.py config/__init__.py data/__init__.py
-```
-
-### 3. Start the API Server
-
-```bash
-python main.py
-```
-
-Server starts at `http://localhost:8000`. Model 3 trains automatically on first run (~15 seconds).
-
-### 4. Test All Models
-
-```bash
-python test_analyzer.py              # Test Model 1
-python test_job_recommender.py       # Test Model 2
-python test_full_pipeline.py         # Test Model 1 + 2
-python test_selection_predictor.py   # Test Model 3
-```
-
----
-
 ## API Endpoints
 
 ### General
@@ -412,34 +377,6 @@ import JobRecommender from './integration_examples/JobRecommender';
 | 40-54 | C-/D | Needs Work |
 | 0-39 | F | Not Ready |
 
----
-
-## Bug Fixes Applied (v1.1.0)
-
-### skills_extractor.py
-- **FIX 1:** TF-IDF default score `0.5 → 0.0` (was inflating every skill's baseline)
-- **FIX 2:** `demand_mult` normalized `1.5/1.0 → 1.0/0.4` (was exceeding 25-pt weight budget)
-- **FIX 3:** `category_weight` normalized `1.0-1.2 → 0.60-1.0` (same issue)
-- **FIX 4:** Removed `max(40, raw_score)` floor (was giving every skill ≥40 regardless of presence)
-- **FIX 5:** O(n²) `list.index()` → O(1) dict lookup for TF-IDF feature names
-- **FIX 6:** Diversity `base_score` log10 → linear (`(total/20)*60`)
-
-### scoring_engine.py
-- **FIX 1:** `count_score` log10 formula → linear (`(total_skills/15)*50`)
-- **FIX 2:** Fresher base experience score `50 → 20` (zero experience ≠ Average)
-- **FIX 3:** Zero-project floor `30 → 10`
-- **FIX 4:** Word count upper threshold `1200 → 1500` (Indian resumes are longer)
-
-### main.py
-- **FIX:** Route order — `/api/jobs/categories` moved before `/api/jobs/{job_id}`
-- **FIX:** Replaced deprecated `@app.on_event("startup")` with `lifespan` context manager
-- **ADDED:** Model 3 endpoints
-- **ADDED:** Model 4 endpoints
-- **ADDED:** `/api/readiness` — full 4-model pipeline endpoint
-
----
-
-## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
