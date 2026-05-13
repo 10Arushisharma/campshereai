@@ -5,9 +5,6 @@ import { getFullReadiness } from "../../api/camspherApi";
 // data.job_recommendations.top_jobs    ← Model 2
 // data.selection_prediction.probability ← Model 3
 // data.placement_readiness.readiness_score ← Model 4
-
-
-import { useState } from "react";
 import {
   Users,
   CheckCircle2,
