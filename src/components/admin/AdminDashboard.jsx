@@ -1,5 +1,9 @@
 import { checkHealth, getModel3Metrics } from "../../api/camspherApi";
 // checkHealth() → shows ✅/❌ for all 4 models
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
 // getModel3Metrics() → shows accuracy/AUC of LR, RF, DT
 
 import React, { useState } from "react";
@@ -368,3 +372,9 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+<<<<<<< HEAD
+=======
+=======
+// getModel3Metrics() → shows accuracy/AUC of LR, RF, DT
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1

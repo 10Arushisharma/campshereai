@@ -1,4 +1,8 @@
 import { getReadinessDirect } from "../../api/camspherApi";
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
 // pass stored student scores → get readiness score back
 import React, { useMemo, useState } from "react";
 import {
@@ -500,3 +504,9 @@ function UserManagement() {
 }
 
 export default UserManagement;
+<<<<<<< HEAD
+=======
+=======
+// pass stored student scores → get readiness score back
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1

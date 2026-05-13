@@ -31,9 +31,21 @@ const sidebarConfig = {
   ],
   admin: [
     { to: "/admin-dashboard", label: "Dashboard", icon: LayoutDashboard },
+<<<<<<< HEAD
     { to: "/admin-dashboard/users", label: "UserManagement", icon: Users },
     { to: "/admin-dashboard/jobs", label: "JobManagement", icon: Building2 },
     { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
+=======
+<<<<<<< HEAD
+    { to: "/admin-dashboard/users", label: "UserManagement", icon: Users },
+    { to: "/admin-dashboard/jobs", label: "JobManagement", icon: Building2 },
+    { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
+=======
+    { to: "/admin-dashboard/users", label: "Users", icon: Users },
+    { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
+    { to: "/admin-dashboard/companies", label: "Companies", icon: Building2 },
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
   ],
 };
 
@@ -70,7 +82,15 @@ function Sidebar() {
         {/* LOGO */}
         <div className="px-6 mb-8">
           <h2 className="text-lg font-extrabold text-[#24389c]">
+<<<<<<< HEAD
             {role === "recruiter" ? "CampSphere" : "CampSphere"}
+=======
+<<<<<<< HEAD
+            {role === "recruiter" ? "CampSphere" : "CampSphere"}
+=======
+            {role === "recruiter" ? "CampSphere" : "Concierge AI"}
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
           </h2>
         </div>
 

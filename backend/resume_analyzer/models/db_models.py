@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
+<<<<<<< HEAD
 from backend.resume_analyzer.database import Base
+=======
+from database import Base
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
 import datetime
 import json
 

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
 import { getAllJobs, getJobCategories, getSimilarJobs } from "../../api/camspherApi";
 
 import React, {useMemo, useState, useEffect } from "react";
@@ -969,3 +973,9 @@ const filteredCompanies = useMemo(() => {
 }
 
 export default JobManagement;
+<<<<<<< HEAD
+=======
+=======
+import { getAllJobs, getJobCategories, getSimilarJobs } from "../../api/camspherApi";
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
+>>>>>>> fe183888c2042d6c21e43802e39f44db90f765b1
