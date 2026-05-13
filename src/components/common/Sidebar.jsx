@@ -31,9 +31,15 @@ const sidebarConfig = {
   ],
   admin: [
     { to: "/admin-dashboard", label: "Dashboard", icon: LayoutDashboard },
+<<<<<<< HEAD
     { to: "/admin-dashboard/users", label: "UserManagement", icon: Users },
     { to: "/admin-dashboard/jobs", label: "JobManagement", icon: Building2 },
     { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
+=======
+    { to: "/admin-dashboard/users", label: "Users", icon: Users },
+    { to: "/admin-dashboard/analytics", label: "Analytics", icon: BarChart2 },
+    { to: "/admin-dashboard/companies", label: "Companies", icon: Building2 },
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
   ],
 };
 
@@ -70,7 +76,11 @@ function Sidebar() {
         {/* LOGO */}
         <div className="px-6 mb-8">
           <h2 className="text-lg font-extrabold text-[#24389c]">
+<<<<<<< HEAD
             {role === "recruiter" ? "CampSphere" : "CampSphere"}
+=======
+            {role === "recruiter" ? "CampSphere" : "Concierge AI"}
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
           </h2>
         </div>
 

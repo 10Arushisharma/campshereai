@@ -1,5 +1,9 @@
 import { getAllJobs, getJobCategories } from "../../api/camspherApi";
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
+=======
+import React, { useState } from "react";
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 import {
   Plus,
   Search,
@@ -8,7 +12,10 @@ import {
   Calendar,
   MoreHorizontal,
   Trash2 ,
+<<<<<<< HEAD
     X,
+=======
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 } from "lucide-react";
 
 const initialJobs = [
@@ -35,6 +42,7 @@ function PostJob() {
   const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState({
+<<<<<<< HEAD
     company: "",
     role: "",
     description: "",
@@ -46,6 +54,13 @@ function PostJob() {
     deadline: "",
     type: "",
     applyLink: "",
+=======
+    title: "",
+    dept: "",
+    type: "",
+    location: "",
+    description: "",
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
   });
 
   const filtered = jobs.filter((j) => {
@@ -56,6 +71,7 @@ function PostJob() {
     return matchSearch && matchFilter;
   });
 
+<<<<<<< HEAD
 const handlePost = () => {
   if (
     !form.company ||
@@ -101,6 +117,36 @@ const handlePost = () => {
 
   setOpen(false);
 };
+=======
+  const handlePost = () => {
+    if (!form.title || !form.dept || !form.type || !form.location) {
+      alert("Fill all fields");
+      return;
+    }
+
+    setJobs([
+      ...jobs,
+      {
+        id: Date.now(),
+        ...form,
+        applicants: 0,
+        date: new Date().toDateString(),
+        status: "LIVE",
+      },
+    ]);
+
+    setForm({
+      title: "",
+      dept: "",
+      type: "",
+      location: "",
+      description: "",
+    });
+
+    setOpen(false);
+  };
+
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
   const toggleStatus = (id) => {
   setJobs((prev) =>
     prev.map((job) => {
@@ -225,6 +271,7 @@ const deleteJob = (id) => {
         ))}
       </div>
 
+<<<<<<< HEAD
      {/* MODAL */}
 {open && (
   <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto p-4">
@@ -387,6 +434,49 @@ const deleteJob = (id) => {
     </div>
   </div>
 )}
+=======
+      {/* MODAL */}
+      {open && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white p-5 rounded-xl w-[350px] space-y-3">
+            <h2 className="font-bold">Post New Job</h2>
+
+            <input className="border p-2 w-full" placeholder="Title"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
+
+            <input className="border p-2 w-full" placeholder="Department"
+              value={form.dept}
+              onChange={(e) => setForm({ ...form, dept: e.target.value })}
+            />
+
+            <input className="border p-2 w-full" placeholder="Type"
+              value={form.type}
+              onChange={(e) => setForm({ ...form, type: e.target.value })}
+            />
+
+            <input className="border p-2 w-full" placeholder="Location"
+              value={form.location}
+              onChange={(e) => setForm({ ...form, location: e.target.value })}
+            />
+
+            <textarea className="border p-2 w-full" placeholder="Description"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setOpen(false)}>Cancel</button>
+              <button onClick={handlePost} className="!bg-blue-600 text-white px-3 py-1 rounded">
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
     </div>
   );
 }

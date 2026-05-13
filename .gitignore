@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # ── Python / Backend 
+=======
+# ── Python / Backend ──────────────────────────────────────
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 __pycache__/
 *.pyc
 *.pyo
@@ -7,39 +11,74 @@ __pycache__/
 *.pyz
 .Python
 *.egg-info/
+<<<<<<< HEAD
 
 .env
 .env.local
 .env.production
 
+=======
+.env
+.env.local
+.env.production
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 venv/
 env/
 .venv/
 
+<<<<<<< HEAD
 # ML Models 
 saved_models/*.pkl
 saved_models/*.json
 
 # ── Node / Frontend 
+=======
+# ML Models (large binary files — regenerate on first run)
+saved_models/*.pkl
+saved_models/*.json
+
+# ── Node / Frontend ───────────────────────────────────────
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 node_modules/
 dist/
 dist-ssr/
 *.local
 
+<<<<<<< HEAD
 # ── VS Code 
 .vscode/
 *.code-workspace
 
 # ── OS Files 
+=======
+# ── VS Code ───────────────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# ── OS Files ──────────────────────────────────────────────
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 .DS_Store
 Thumbs.db
 desktop.ini
 
+<<<<<<< HEAD
 # ── Logs 
+=======
+# ── Logs ─────────────────────────────────────────────────
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 *.log
 npm-debug.log*
 yarn-debug.log*
 
+<<<<<<< HEAD
 # ── Uploaded resumes / temp files 
 uploads/
 temp/
+=======
+# ── Uploaded resumes (user data — never commit) ───────────
+uploads/
+temp/
+.env.local
+.env
+package-lock.json
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a

@@ -15,11 +15,19 @@ Bug fixes vs previous main.py:
   - Added combined 4-model pipeline (/api/full-pipeline)
   - Updated version to 4.0.0
 """
+<<<<<<< HEAD
 
+=======
+import platform
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 import sys
 import os
 from contextlib import asynccontextmanager
 
+<<<<<<< HEAD
+=======
+is_windows = platform.system() == "Windows"
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Query
@@ -34,6 +42,17 @@ from utils.job_matcher import JobRecommendationEngine
 from utils.selection_predictor import SelectionPredictor
 from utils.placement_readiness import PlacementReadinessEngine
 
+<<<<<<< HEAD
+=======
+from database import engine, Base
+from models import db_models
+from routers import auth_routes
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 
 # ============================================================================
 # Global model instances
@@ -107,6 +126,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+<<<<<<< HEAD
+=======
+app.include_router(auth_routes.router)
+
+
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 
 # ============================================================================
 # Pydantic Request Schemas
@@ -830,6 +855,7 @@ async def readiness_direct(request: ReadinessDirectRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Readiness computation failed: {str(e)}")
 
+<<<<<<< HEAD
 
 # ============================================================================
 # Run Server
@@ -842,5 +868,20 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=port,
         reload=not is_windows, 
+=======
+# ============================================================================
+# Run Server
+# ============================================================================
+is_windows = os.name == "nt"
+if __name__ == "__main__":
+
+    port = int(os.environ.get("PORT", 8000))
+
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=port,
+        reload=not is_windows,
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
         log_level="info"
     )

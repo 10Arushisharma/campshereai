@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import { Routes, Route } from "react-router-dom";
 import Sidebar from '../common/Sidebar';
 import AdminDashboard from '../admin/AdminDashboard';
@@ -20,6 +21,13 @@ function AdminPortal() {
            </Routes>
 
       </div>
+=======
+
+function AdminPortal() {
+  return (
+    <div>
+      
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
     </div>
   )
 }

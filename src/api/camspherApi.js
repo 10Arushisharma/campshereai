@@ -7,12 +7,29 @@
  */
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+<<<<<<< HEAD
+=======
+import { auth } from "../firebase/firebase";
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 async function request(endpoint, options = {}) {
   try {
+<<<<<<< HEAD
     const res = await fetch(`${API_BASE}${endpoint}`, {
       headers: { "Content-Type": "application/json" },
+=======
+    const headers = { "Content-Type": "application/json" };
+    
+    // Attach Firebase Auth Token if user is logged in
+    if (auth.currentUser) {
+      const token = await auth.currentUser.getIdToken();
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      headers: { ...headers, ...(options.headers || {}) },
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
       ...options,
     });
     if (!res.ok) {
@@ -52,11 +69,27 @@ export const analyzeResumeText = (resumeText) =>
  * Analyze resume from uploaded PDF/DOCX file.
  * @param {File} file — from <input type="file">
  */
+<<<<<<< HEAD
 export const analyzeResumeFile = (file) => {
   const formData = new FormData();
   formData.append("file", file);
   return fetch(`${API_BASE}/api/analyze/file`, {
     method: "POST",
+=======
+export const analyzeResumeFile = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  
+  const headers = {};
+  if (auth.currentUser) {
+    const token = await auth.currentUser.getIdToken();
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return fetch(`${API_BASE}/api/analyze/file`, {
+    method: "POST",
+    headers,
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
     body: formData,
   }).then((r) => r.json());
 };

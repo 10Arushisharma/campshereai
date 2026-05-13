@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useRef, useState } from "react";
+=======
+import React from 'react';
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 import { useLocation } from "react-router-dom";
 import {
   GraduationCap,
@@ -21,10 +25,16 @@ const Badge = ({ children, className = "" }) => (
   </span>
 );
 
+<<<<<<< HEAD
 const Button = ({ children, className = "", ...props }) => (
   <button className={`rounded-lg ${className}`} {...props}>
     {children}
   </button>
+=======
+/* Simple Button */
+const Button = ({ children, className = "" }) => (
+  <button className={`rounded-lg ${className}`}>{children}</button>
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
 );
 
 /* Dummy Readiness Chart */
@@ -71,6 +81,7 @@ const statusColors = {
 };
 
 function Dashboard() {
+<<<<<<< HEAD
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef();
@@ -86,6 +97,8 @@ function Dashboard() {
     }
   };
 
+=======
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
   const { pathname } = useLocation();
 
   const pageTitles = {
@@ -115,6 +128,7 @@ function Dashboard() {
         </h2>
 
         <div className="flex items-center gap-3">
+<<<<<<< HEAD
           <div className="flex items-center gap-3 relative">
 
   {/* Notifications */}
@@ -187,6 +201,18 @@ function Dashboard() {
               {(localStorage.getItem("userName") || "U")
               .charAt(0)
               .toUpperCase()}
+=======
+          <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
+            <Bell size={18} />
+          </button>
+
+          <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
+            <Settings size={18} />
+          </button>
+
+          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+            A
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
           </div>
         </div>
       </div>
@@ -194,12 +220,17 @@ function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">
+<<<<<<< HEAD
             Welcome back, {localStorage.getItem("userName") || "User"}.
+=======
+            Welcome back, Alex.
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Your placement journey is 82% ready for the current cycle.
           </p>
         </div>
+<<<<<<< HEAD
          <>
       {/* Hidden Input */}
       <input
@@ -218,6 +249,11 @@ function Dashboard() {
         Upload Resume
       </Button>
     </>
+=======
+        <Button className="text-black px-5 py-2.5 text-sm font-semibold">
+          View Resume Analysis
+        </Button>
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
       </div>
 
       {/* Top Stats */}

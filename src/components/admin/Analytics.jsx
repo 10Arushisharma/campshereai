@@ -4,6 +4,7 @@ import { getFullReadiness } from "../../api/camspherApi";
 // data.resume_analysis.overall_score   ← Model 1
 // data.job_recommendations.top_jobs    ← Model 2
 // data.selection_prediction.probability ← Model 3
+<<<<<<< HEAD
 // data.placement_readiness.readiness_score ← Model 4
 import {
   Users,
@@ -681,3 +682,6 @@ function DeptTable() {
 }
 export default Analytics;
 
+=======
+// data.placement_readiness.readiness_score ← Model 4
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a

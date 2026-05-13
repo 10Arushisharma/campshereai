@@ -14,6 +14,10 @@
     "autoprefixer": "^10.5.0",
     "axios": "^1.15.0",
     "chart.js": "^4.5.1",
+<<<<<<< HEAD
+=======
+    "firebase": "^12.13.0",
+>>>>>>> 66e74765270250cf239d6dba7e73fe97b971a73a
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "postcss": "^8.5.10",
