@@ -35,6 +35,14 @@ from utils.job_matcher import JobRecommendationEngine
 from utils.selection_predictor import SelectionPredictor
 from utils.placement_readiness import PlacementReadinessEngine
 
+from database import engine, Base
+from models import db_models
+from routers import auth_routes
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+
 
 # ============================================================================
 # Global model instances
@@ -107,6 +115,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_routes.router)
+
 
 
 # ============================================================================

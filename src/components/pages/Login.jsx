@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye } from "lucide-react";
+import { Mail, Lock, Eye, User, Briefcase } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const [isSignup, setIsSignup] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { login, loginWithGoogle } = useAuth();
+  const { login, signup, loginWithGoogle } = useAuth();
 
   const params = new URLSearchParams(location.search);
   const role = params.get("role") || "student";
@@ -20,7 +23,7 @@ const Login = () => {
   // 🎨 Role-based UI
   const roleConfig = {
     student: {
-      title: "Student Login",
+      title: isSignup ? "Student Signup" : "Student Login",
       color: "text-blue-600",
       button: "bg-blue-700",
       ring: "focus-within:ring-blue-400", 
@@ -29,7 +32,7 @@ const Login = () => {
       icon: "👤",
     },
     admin: {
-      title: "Admin Login",
+      title: isSignup ? "Admin Signup" : "Admin Login",
       color: "text-red-500",
       button: "bg-red-600",
       ring: "focus-within:ring-red-400", 
@@ -38,7 +41,7 @@ const Login = () => {
       icon: "🔒",
     },
     recruiter: {
-      title: "Recruiter Login",
+      title: isSignup ? "Recruiter Signup" : "Recruiter Login",
       color: "text-green-600",
       button: "bg-green-700",
       ring: "focus-within:ring-green-400", 
@@ -50,14 +53,14 @@ const Login = () => {
 
   const current = roleConfig[role];
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!email || !password) {
-      setError("All fields are required");
+    if (!email || !password || (isSignup && !name)) {
+      setError("All required fields must be filled");
       return;
     }
 
@@ -71,12 +74,21 @@ const Login = () => {
       return;
     }
 
+    if (isSignup && role === "recruiter" && !companyName) {
+      setError("Company Name is required for recruiters");
+      return;
+    }
+
     try {
       setLoading(true);
-      await login(email, password, role);
+      if (isSignup) {
+        await signup(name, email, password, role, companyName);
+      } else {
+        await login(email, password, role);
+      }
       navigate(`/${role}-dashboard`);
     } catch (err) {
-      setError("Failed to log in: " + err.message);
+      setError(`Failed to ${isSignup ? "sign up" : "log in"}: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -97,10 +109,10 @@ const Login = () => {
 
   return (
     <div
-      className={`min-h-screen w-screen flex items-center justify-center bg-gradient-to-br ${current.gradient}`}
+      className={`min-h-screen w-screen flex items-center justify-center bg-gradient-to-br ${current.gradient} py-10`}
     >
       {/* CARD */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center my-auto">
 
         {/* ICON */}
         <div className={`w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-2xl shadow ${current.iconBg}`}>
@@ -113,46 +125,92 @@ const Login = () => {
         </h2>
 
         <p className="text-gray-500 text-sm mb-6">
-          Welcome back! Please enter your credentials
+          {isSignup ? "Create an account to get started" : "Welcome back! Please enter your credentials"}
         </p>
 
         {error && <div className="mb-4 text-red-500 text-sm bg-red-50 p-2 rounded">{error}</div>}
 
-        {/* EMAIL */}
-        <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
-          <Mail className="text-gray-400 w-5" />
-          <input
-            type="email"
-            placeholder="Email address"
-            className="w-full p-3 outline-none text-sm sm:text-base"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          {/* FULL NAME (Only for Signup) */}
+          {isSignup && (
+            <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+              <User className="text-gray-400 w-5" />
+              <input
+                type="text"
+                placeholder="Full Name"
+                className="w-full p-3 outline-none text-sm sm:text-base"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          )}
 
-        {/* PASSWORD */}
-        <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
-          <Lock className="text-gray-400 w-5" />
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            className="w-full p-3 outline-none text-sm sm:text-base"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Eye
-            className="text-gray-400 w-5 cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-        />
+          {/* COMPANY NAME (Only for Recruiter Signup) */}
+          {isSignup && role === "recruiter" && (
+            <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+              <Briefcase className="text-gray-400 w-5" />
+              <input
+                type="text"
+                placeholder="Company Name"
+                className="w-full p-3 outline-none text-sm sm:text-base"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* EMAIL */}
+          <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+            <Mail className="text-gray-400 w-5" />
+            <input
+              type="email"
+              placeholder="Email address"
+              className="w-full p-3 outline-none text-sm sm:text-base"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+            <Lock className="text-gray-400 w-5" />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full p-3 outline-none text-sm sm:text-base"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Eye
+              className="text-gray-400 w-5 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </div>
+          
+          {/* SUBMIT BUTTON */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg text-sm font-semibold text-black ${current.button} shadow-lg hover:shadow-xl transition-all disabled:opacity-50`}
+          >
+            {loading ? (isSignup ? "Signing up..." : "Logging in...") : (isSignup ? "Sign Up" : "Login")}
+          </button>
+        </form>
+
+        {/* TOGGLE SIGNUP/LOGIN */}
+        <div className="mt-4 text-sm text-gray-600">
+          {isSignup ? "Already have an account? " : "Don't have an account? "}
+          <button 
+            type="button"
+            className={`font-semibold hover:underline ${current.color}`}
+            onClick={() => {
+              setIsSignup(!isSignup);
+              setError("");
+            }}
+          >
+            {isSignup ? "Login here" : "Sign up here"}
+          </button>
         </div>
-        
-        {/* LOGIN BUTTON */}
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className={`w-full py-3 rounded-lg text-sm font-semibold text-black ${current.button} shadow-lg hover:shadow-xl transition-all disabled:opacity-50`}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
 
         {/* DIVIDER */}
         <div className="my-5 text-gray-400 text-sm">or</div>
@@ -160,6 +218,7 @@ const Login = () => {
         {/* GOOGLE BUTTON */}
         <button 
           onClick={handleGoogleLogin}
+          type="button"
           disabled={loading}
           className="w-full border py-3 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base hover:bg-gray-50 disabled:opacity-50"
         >
@@ -168,7 +227,7 @@ const Login = () => {
             alt="google"
             className="w-5"
           />
-          Login with Google
+          {isSignup ? "Sign up with Google" : "Login with Google"}
         </button>
       </div>
     </div>

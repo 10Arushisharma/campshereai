@@ -3,8 +3,8 @@ import LandingPage from "./components/pages/LandingPage";
 import Login from "./components/pages/Login";
 import StudentPortal from "./components/pages/StudentPortal";
 import RecruiterPortal from "./components/pages/RecruiterPortal";
-// If AdminPortal exists, it can be imported here:
-// import AdminDashboard from "./components/pages/AdminDashboard";
+import AdminPortal from "./components/pages/AdminPortal";
+
 import { AuthProvider } from "./components/context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -31,16 +31,15 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          {/* Example of how to add admin later if it exists:
           <Route 
             path="/admin-dashboard/*" 
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminDashboard />
+                <AdminPortal />
               </ProtectedRoute>
             } 
           />
-          */}
+
         </Routes>
       </Router>
     </AuthProvider>
