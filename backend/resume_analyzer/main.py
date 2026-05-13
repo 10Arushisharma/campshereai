@@ -845,15 +845,15 @@ async def readiness_direct(request: ReadinessDirectRequest):
 # ============================================================================
 # Run Server
 # ============================================================================
-
+is_windows = os.name == "nt"
 if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 8000))
 
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=port,
-        reload=False,
+        reload=not is_windows,
         log_level="info"
     )
