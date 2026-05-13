@@ -1,4 +1,4 @@
-# CAMSPHER-AI Smart Placement API — v4.0.0
+# CAMSPHER-AI Smart Placement API
 
 AI-powered Placement Platform for College Students. All 4 models integrated into a single FastAPI backend.
 
